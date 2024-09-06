@@ -86,6 +86,14 @@ rlJournalStart
             rlAssertRpm --all
         rlPhaseEnd
 
+        rlPhaseStartSetup "Check that we are not on a UEFI machine"
+            rlRun "ls /sys/firmware/ | grep efi" \
+                1 "Check if we are on UEFI machine"
+            if [ $? -eq 0 ]; then
+                rlDie "Machine with UEFI"
+            fi
+        rlPhaseEnd
+
         # Configure ReaR for ISO output.
         # Backup will be embedded in the ISO. Since the ISO is not written/burned
         # to any disk, but merely loaded into RAM by the bootloader (memdisk - see below),
